@@ -1,0 +1,31 @@
+
+.app {
+  &__form-card {
+    min-height: 300px;
+    width: 100%;
+    background-color: white;
+    position: relative;
+  }
+
+  &__remove-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    border: none;
+    outline: none;
+  }
+
+  &__form-add-button {
+    background: linear-gradient(to right, grey, white);
+    border: 2px dotted grey;
+    outline: none;
+  }
+
+  &__form-add-button-content {
+    width: 50px;
+    height: 50px;
+    border: 1px dotted var(--bs-primary);
+  }
+}

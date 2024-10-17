@@ -1,0 +1,86 @@
+<form class="d-flex flex-column" [formGroup]="form">
+
+  <div class="container">
+    <div class="row">
+      <div class="mb-3 d-flex align-items-center">
+        @if (cancelSeconds$ | async; as seconds) {
+          <button class="btn btn-danger" (click)="cancel()">
+            Cancel
+          </button>
+          <span>0:0{{ seconds }}</span>
+        } @else {
+          <button class="btn btn-primary me-2" [disabled]="!form.valid || !formArray.controls.length"
+                  (click)="submit()">
+            Submit all forms
+          </button>
+          @if (invalidFormsCount; as count) {
+            <span class="text-danger">Invalid forms: {{ count }}</span>
+          }
+        }
+      </div>
+    </div>
+    <div class="row">
+      @for (item of form.controls.array.controls; track item; let index = $index) {
+        <div class="col-6 mb-2">
+          <div class="app__form-card shadow-lg p-4">
+            <button
+              class="btn btn-danger app__remove-button d-inline-flex align-items-center justify-content-center rounded-circle"
+              [disabled]="form.disabled"
+              (click)="removeItem(index)">X
+            </button>
+            <ng-container *ngTemplateOutlet="formTemplate; context: {$implicit: item, id: ids[index]}"/>
+          </div>
+        </div>
+      }
+      <div class="col-6 mb-2">
+        <button
+          class="btn app__form-card app__form-add-button d-flex align-items-center justify-content-center shadow-lg"
+          [disabled]="formArray.controls.length >= 10"
+          (click)="addItem()">
+          <div
+            class="rounded-circle app__form-add-button-content d-flex align-items-center text-primary justify-content-center fs-1">
+            <span>+</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</form>
+
+<ng-template #formTemplate let-cardForm let-formId="id" [templateContext]="formTemplateCtx">
+  <form class="d-flex flex-column" [formGroup]="cardForm">
+    <control-container class="mb-2">
+      <label for="country-{{formId}}" class="mb-1">Country</label>
+      <div class="input-group">
+        <input id="country-{{formId}}" showValid class="form-control" appInputValidation formControlName="country"
+               [ngbTypeahead]="search">
+      </div>
+    </control-container>
+    <control-container class="mb-2">
+      <label for="username-{{formId}}" class="mb-1">Username</label>
+      <div class="input-group">
+        <input id="username-{{formId}}" showValid showPending class="form-control" appInputValidation
+               formControlName="username">
+      </div>
+    </control-container>
+    <control-container class="mb-2">
+      <label for="birthday-{{formId}}" class="mb-1">Birthday</label>
+      <div class="input-group">
+        <input
+          class="form-control"
+          id="birthday-{{formId}}"
+          placeholder="yyyy-mm-dd"
+          name="dp"
+          appInputValidation formControlName="birthday"
+          ngbDatepicker
+          showValid
+          #d="ngbDatepicker"
+        />
+        <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+          📅
+        </button>
+      </div>
+    </control-container>
+  </form>
+</ng-template>
